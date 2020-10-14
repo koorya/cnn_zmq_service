@@ -6,6 +6,7 @@
 
 import time
 import zmq
+import json
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
@@ -16,6 +17,9 @@ while message != b"kill":
 	message = socket.recv()
 	print("Received request: %s" % message)
 
+	obj = json.loads(message)
+	if (hasattr(obj, 'name')) :
+		print(obj.name)
 	#  Do some 'work'
 	time.sleep(0.1)
 
