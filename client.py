@@ -28,7 +28,11 @@ socket.send(bytes(j_str, 'utf-8'))
 
 #  Get the reply.
 message = socket.recv()
-print("Received reply [ %s ]" % ( message ) )
+try :
+	j_obj = json.loads(message, object_hook=decode_object)
+	print("res = {}".format(j_obj.res))
+except :
+	print("invalid json \n {}".format(message))
 
 socket.send(b"kill")
 

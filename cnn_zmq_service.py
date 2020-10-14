@@ -22,6 +22,10 @@ while message != b"kill":
 	try :
 		j_obj = json.loads(message, object_hook=decode_object)
 		print("a = {}, b = {}, a+b = {}".format(j_obj.a, j_obj.b, j_obj.a + j_obj.b))
+		res1 = answer()
+		res1.res = j_obj.a + j_obj.b
+		socket.send(bytes( json.dumps(res1, cls=CustomEncoder), 'utf-8' ))
+		continue
 	except :
 		print("invalid json \n {}".format(message))
 	#  Do some 'work'
