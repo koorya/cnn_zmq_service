@@ -8,6 +8,8 @@ import time
 import zmq
 import json
 
+from task_serialize import *
+
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:5555")
@@ -17,9 +19,11 @@ while message != b"kill":
 	message = socket.recv()
 	print("Received request: %s" % message)
 
-	obj = json.loads(message)
-	if (hasattr(obj, 'name')) :
-		print(obj.name)
+	try :
+		j_obj = json.loads(message, object_hook=decode_object)
+		print("a = {}, b = {}, a+b = {}".format(j_obj.a, j_obj.b, j_obj.a + j_obj.b))
+	except :
+		print("invalid json \n {}".format(message))
 	#  Do some 'work'
 	time.sleep(0.1)
 
