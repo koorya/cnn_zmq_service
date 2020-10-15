@@ -25,7 +25,7 @@ class task(object):
 	"""
 	a = 0
 	b = 0
-	image = 0
+	image = None
 	pass
 
 class answer(object):
@@ -33,6 +33,7 @@ class answer(object):
 	ответы отправляются в таком формате
 	"""
 	res = 0
+	image = None
 	pass
 
 # идея взята отсюда, толком не разобрался что именно происходит
