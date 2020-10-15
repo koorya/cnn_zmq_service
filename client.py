@@ -7,6 +7,7 @@
 import zmq
 import json
 from task_serialize import *
+import cv2
 
 context = zmq.Context()
 
@@ -17,10 +18,14 @@ socket.connect("tcp://localhost:5555")
 
 	
 
+cap = cv2.VideoCapture(0)
+_, frame = cap.read()
+
 
 task1 = task()
 task1.a = 2
 task1.b = 5
+task1.image = frame
 
 j_str = json.dumps(task1, cls=CustomEncoder)
 

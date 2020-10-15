@@ -7,27 +7,32 @@
 import time
 import zmq
 import json
-
+import cv2
 from task_serialize import *
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:5555")
 message = 0
-while message != b"kill":
+while message != "kill":
 	#  Wait for next request from client
-	message = socket.recv()
-	print("Received request: %s" % message)
+	message = socket.recv().decode('utf-8"')
+	# print("Received request: %s" % message)
 
 	try :
 		j_obj = json.loads(message, object_hook=decode_object)
 		print("a = {}, b = {}, a+b = {}".format(j_obj.a, j_obj.b, j_obj.a + j_obj.b))
 		res1 = answer()
 		res1.res = j_obj.a + j_obj.b
+		print("j_obj.image.__class__ == ", j_obj.image.__class__)
+		cv2.imshow("service", j_obj.image)
+		cv2.waitKey(5000)
+		print("imshow")
 		socket.send(bytes( json.dumps(res1, cls=CustomEncoder), 'utf-8' ))
 		continue
 	except :
 		print("invalid json \n {}".format(message))
+		pass
 	#  Do some 'work'
 	time.sleep(0.1)
 
