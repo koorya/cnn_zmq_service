@@ -28,21 +28,17 @@ message = 0
 while message != "kill":
 	#  Wait for next request from client
 	message = socket.recv().decode('utf-8"')
-	# print("Received request: %s" % message)
 
 	try :
 		j_obj = json.loads(message, object_hook=decode_object)
 		res = some_work(j_obj)
 		res.image = cnn1.predict(j_obj.image)
-		print("res.image.__class__ is ", res.image.__class__)
 		j_str = json.dumps(res, cls=CustomEncoder)
 		socket.send(bytes( j_str, 'utf-8' ))
 		continue
 	except :
 		print("invalid json \n {}".format(message))
 		pass
-	#  Do some 'work'
-	time.sleep(0.1)
 
 	#  Send reply back to client
-	socket.send(b"World")
+	socket.send(b"No command")

@@ -50,6 +50,7 @@ while 1:
 		break
 
 
-
+cap.release()
+cv2.destroyAllWindows()
 socket.send(b"kill")
 message = socket.recv()
