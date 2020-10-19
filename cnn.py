@@ -44,6 +44,5 @@ class Cnn():
 		predict_gray = gray.reshape((-1, 512, 512, 3))
 		result = self.model.predict(predict_gray, verbose=1)
 		result = result.reshape((512, 512, -1))
-		print("view_gray.dtype == ", view_gray.dtype)
 		to_save = np.hstack((view_gray, cv2.cvtColor(result, cv2.COLOR_BGR2RGB)))
 		return (to_save*255).astype('uint8')

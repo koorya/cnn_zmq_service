@@ -2,7 +2,7 @@ import base64
 import numpy as np
 import cv2
 import json
-from task_serialize import *
+from CNNTask_serialize import *
 from cnn import *
 
 with open("test.jpg", "rb") as f:

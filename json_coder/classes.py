@@ -1,6 +1,7 @@
 
 
-class task(object):
+
+class CNNTask(object):
 	"""
 	задания будут десериализоваться в объект такого класса
 	"""
@@ -9,7 +10,7 @@ class task(object):
 	image = None
 	pass
 
-class answer(object):
+class CNNAnswer(object):
 	"""
 	ответы отправляются в таком формате
 	"""
@@ -17,4 +18,11 @@ class answer(object):
 	image = None
 	pass
 
+
+class ServiceTask(object):
+	command = ""
+	def __init__(self, command):
+		self.command = command
+		pass
+	pass
 

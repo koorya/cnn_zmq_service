@@ -23,12 +23,12 @@ cap = cv2.VideoCapture(0)
 while 1:
 	_, frame = cap.read()
 
-	task1 = json_coder.classes.task()
-	task1.a = 2
-	task1.b = 5
-	task1.image = frame
+	CNNTask1 = json_coder.classes.CNNTask()
+	CNNTask1.a = 2
+	CNNTask1.b = 5
+	CNNTask1.image = frame
 
-	j_str = json.dumps(task1, cls=json_coder.coder.CustomEncoder)
+	j_str = json.dumps(CNNTask1, cls=json_coder.coder.CustomEncoder)
 
 	socket.send(bytes(j_str, 'utf-8'))
 
@@ -52,5 +52,9 @@ while 1:
 
 cap.release()
 cv2.destroyAllWindows()
-socket.send(b"kill")
-message = socket.recv()
+
+
+kill_task = json_coder.classes.ServiceTask("kill")
+j_str = json.dumps(kill_task, cls=json_coder.coder.CustomEncoder)
+socket.send(bytes(j_str, 'utf-8'))
+
