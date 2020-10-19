@@ -8,6 +8,8 @@ import zmq
 import json
 import json_coder.json_coder as json_coder
 import cv2
+from json_coder.messagetypes import *
+
 
 context = zmq.Context()
 
@@ -23,7 +25,7 @@ cap = cv2.VideoCapture(0)
 while 1:
 	_, frame = cap.read()
 
-	CNNTask1 = json_coder.classes.CNNTask()
+	CNNTask1 = CNNTask()
 	CNNTask1.a = 2
 	CNNTask1.b = 5
 	CNNTask1.image = frame
@@ -54,7 +56,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 
-kill_task = json_coder.classes.ServiceTask("kill")
+kill_task = ServiceTask("kill")
 j_str = json.dumps(kill_task, cls=json_coder.coder.CustomEncoder)
 socket.send(bytes(j_str, 'utf-8'))
 

@@ -4,14 +4,15 @@
 #   Expects b"Hello" from client, replies with b"World"
 #
 
-import time
+from json.decoder import JSONDecodeError
 import zmq
 import json
-import cv2
 import json_coder.json_coder as json_coder
+from json_coder.messagetypes import *
 from cnn import *
 
-def additionalWork(task_obj: json_coder.classes.CNNTask):
+
+def additionalWork(task_obj: CNNTask):
 	print("a = {}, b = {}, a+b = {}".format(task_obj.a, task_obj.b, task_obj.a + task_obj.b))
 	return task_obj.a + task_obj.b
 
@@ -25,26 +26,27 @@ while True:
 	#  Wait for next request from client
 	message = socket.recv().decode('utf-8"')
 
-	j_obj = None
 
 	try:
 		j_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
-	except :
+
+		if isinstance(j_obj, ServiceTask):
+			service_task: ServiceTask = j_obj
+			if service_task.command == "kill":
+				break
+		elif isinstance(j_obj, CNNTask):
+			cnn_task: CNNTask = j_obj
+			answer: CNNAnswer = CNNAnswer()
+			answer.b = additionalWork(cnn_task)
+			answer.image = cnn.predict(cnn_task.image)
+			j_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
+			socket.send(bytes( j_str, 'utf-8' ))
+			continue
+	except JSONDecodeError:
 		print("invalid json \n {}".format(message))
-
-	if isinstance(j_obj, json_coder.classes.ServiceTask):
-		j_obj: json_coder.classes.ServiceTask = j_obj
-		if j_obj.command == "kill":
-			break
-
-	elif isinstance(j_obj, json_coder.classes.CNNTask):
-		cnn_task: json_coder.classes.CNNTask = j_obj
-		res: json_coder.classes.CNNAnswer = json_coder.classes.CNNAnswer()
-		res.b = additionalWork(cnn_task)
-		res.image = cnn.predict(cnn_task.image)
-		j_str = json.dumps(res, cls=json_coder.coder.CustomEncoder)
-		socket.send(bytes( j_str, 'utf-8' ))
+		socket.send(b"Illegal json")
 		continue
+
 
 
 	#  Send reply back to client
