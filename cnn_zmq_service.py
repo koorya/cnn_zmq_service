@@ -8,18 +8,18 @@ import time
 import zmq
 import json
 import cv2
-from task_serialize import *
+import json_coder.json_coder as json_coder
 from cnn import *
 
 def some_work(task_obj):
-	if isinstance(task_obj, task) == False :
-		return answer()
+	if isinstance(task_obj, json_coder.classes.task) == False :
+		return json_coder.classes.answer()
 	print("a = {}, b = {}, a+b = {}".format(j_obj.a, j_obj.b, j_obj.a + j_obj.b))
-	res1 = answer()
+	res1 = json_coder.classes.answer()
 	res1.res = j_obj.a + j_obj.b
 	return res1
 
-cnn1 = cnn('./cNN/model.json', './cNN/best_weights.h5')
+cnn = Cnn('./cNN/model.json', './cNN/best_weights.h5')
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
@@ -30,10 +30,10 @@ while message != "kill":
 	message = socket.recv().decode('utf-8"')
 
 	try :
-		j_obj = json.loads(message, object_hook=decode_object)
+		j_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
 		res = some_work(j_obj)
-		res.image = cnn1.predict(j_obj.image)
-		j_str = json.dumps(res, cls=CustomEncoder)
+		res.image = cnn.predict(j_obj.image)
+		j_str = json.dumps(res, cls=json_coder.coder.CustomEncoder)
 		socket.send(bytes( j_str, 'utf-8' ))
 		continue
 	except :

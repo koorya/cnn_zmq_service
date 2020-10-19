@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-class cnn():
+class Cnn():
 	model = None
 
 	def __init__(self, model_path, weights_path):

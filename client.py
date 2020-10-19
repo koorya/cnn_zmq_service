@@ -6,7 +6,7 @@
 
 import zmq
 import json
-from task_serialize import *
+import json_coder.json_coder as json_coder
 import cv2
 
 context = zmq.Context()
@@ -23,19 +23,19 @@ cap = cv2.VideoCapture(0)
 while 1:
 	_, frame = cap.read()
 
-	task1 = task()
+	task1 = json_coder.classes.task()
 	task1.a = 2
 	task1.b = 5
 	task1.image = frame
 
-	j_str = json.dumps(task1, cls=CustomEncoder)
+	j_str = json.dumps(task1, cls=json_coder.coder.CustomEncoder)
 
 	socket.send(bytes(j_str, 'utf-8'))
 
 	#  Get the reply.
 	message = socket.recv().decode('utf-8')
 	try :
-		j_obj = json.loads(message, object_hook=decode_object)
+		j_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
 		print("res = {}".format(j_obj.res))
 		cv2.imshow("client", j_obj.image)
 		# cv2.waitKey(5000)
