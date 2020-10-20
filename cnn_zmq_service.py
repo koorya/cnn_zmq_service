@@ -33,11 +33,12 @@ while True:
 		if isinstance(j_obj, ServiceTask):
 			service_task: ServiceTask = j_obj
 			if service_task.command == "kill":
+				print("reciev kill command")
 				break
 		elif isinstance(j_obj, CNNTask):
 			cnn_task: CNNTask = j_obj
 			answer: CNNAnswer = CNNAnswer()
-			answer.b = additionalWork(cnn_task)
+			answer.res = additionalWork(cnn_task)
 			answer.image = cnn.predict(cnn_task.image)
 			j_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
 			socket.send(bytes( j_str, 'utf-8' ))
