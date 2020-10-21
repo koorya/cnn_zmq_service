@@ -7,8 +7,8 @@
 from json.decoder import JSONDecodeError
 import zmq
 import json
-import json_coder.json_coder as json_coder
-from json_coder.messagetypes import *
+import json_coder.py.json_coder as json_coder
+from json_coder.py.messagetypes import *
 from cnn import *
 
 

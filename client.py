@@ -6,9 +6,9 @@
 
 import zmq
 import json
-import json_coder.json_coder as json_coder
+import json_coder.py.json_coder as json_coder
 import cv2
-from json_coder.messagetypes import *
+from json_coder.py.messagetypes import *
 
 
 context = zmq.Context()
