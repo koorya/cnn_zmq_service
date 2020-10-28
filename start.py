@@ -58,4 +58,8 @@ while True:
 
 
 	#  Send reply back to client
-	socket.send(b"No command")
+	defualt_answer = ServiceTask()
+	defualt_answer.command = "Illegal command"
+	answer_str = json.dumps(defualt_answer, cls=json_coder.coder.CustomEncoder)
+	socket.send(bytes( answer_str, 'utf-8' ))
+
