@@ -9,10 +9,10 @@ import zmq
 import json
 import json_coder.py.json_coder as json_coder
 from json_coder.py.messagetypes import *
-from cnn import *
+from cnn.cnn import *
 
-cnn_model = './cNN/model.json' # граф нейросети
-cnn_weight = './cNN/best_weights.h5' # веса нейросети
+cnn_model = './cnn/config/model.json' # граф нейросети
+cnn_weight = './cnn/config/best_weights.h5' # веса нейросети
 socket_name = "tcp://*:5555"
 
 cnn = Cnn(cnn_model, cnn_weight)
