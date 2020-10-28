@@ -36,11 +36,14 @@ while True:
 			answer: CNNAnswer = CNNAnswer()
 			answer.image = cnn.predict(cnn_task.image)
 			answer_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
-			socket.send(bytes( j_str, 'utf-8' ))
+			socket.send(bytes( answer_str, 'utf-8' ))
 			continue
 	except JSONDecodeError:
 		print("invalid json \n {}".format(message))
-		socket.send(b"Illegal json")
+		error_answer = ServiceTask()
+		error_answer.command = "Illegal json"
+		answer_str = json.dumps(error_answer, cls=json_coder.coder.CustomEncoder)
+		socket.send(bytes( answer_str, 'utf-8' ))
 		continue
 
 
