@@ -12,10 +12,6 @@ from json_coder.py.messagetypes import *
 from cnn import *
 
 
-def additionalWork(task_obj: CNNTask):
-	print("a = {}, b = {}, a+b = {}".format(task_obj.a, task_obj.b, task_obj.a + task_obj.b))
-	return task_obj.a + task_obj.b
-
 cnn = Cnn('./cNN/model.json', './cNN/best_weights.h5')
 
 context = zmq.Context()
@@ -28,19 +24,18 @@ while True:
 
 
 	try:
-		j_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
+		task_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
 
-		if isinstance(j_obj, ServiceTask):
-			service_task: ServiceTask = j_obj
+		if isinstance(task_obj, ServiceTask):
+			service_task: ServiceTask = task_obj
 			if service_task.command == "kill":
 				print("reciev kill command")
 				break
-		elif isinstance(j_obj, CNNTask):
-			cnn_task: CNNTask = j_obj
+		elif isinstance(task_obj, CNNTask):
+			cnn_task: CNNTask = task_obj
 			answer: CNNAnswer = CNNAnswer()
-			answer.res = additionalWork(cnn_task)
 			answer.image = cnn.predict(cnn_task.image)
-			j_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
+			answer_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
 			socket.send(bytes( j_str, 'utf-8' ))
 			continue
 	except JSONDecodeError:
