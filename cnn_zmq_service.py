@@ -11,12 +11,15 @@ import json_coder.py.json_coder as json_coder
 from json_coder.py.messagetypes import *
 from cnn import *
 
+cnn_model = './cNN/model.json' # граф нейросети
+cnn_weight = './cNN/best_weights.h5' # веса нейросети
+socket_name = "tcp://*:5555"
 
-cnn = Cnn('./cNN/model.json', './cNN/best_weights.h5')
+cnn = Cnn(cnn_model, cnn_weight)
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-socket.bind("tcp://*:5555")
+socket.bind(socket_name)
 message = ""
 while True:
 	#  Wait for next request from client
