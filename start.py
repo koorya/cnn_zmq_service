@@ -1,9 +1,5 @@
-#
-#   Hello World server in Python
-#   Binds REP socket to tcp://*:5555
-#   Expects b"Hello" from client, replies with b"World"
-#
-
+import sys
+import argparse
 from json.decoder import JSONDecodeError
 import zmq
 import json
@@ -14,6 +10,16 @@ from cnn.cnn import *
 cnn_model = './cnn/config/model.json' # граф нейросети
 cnn_weight = './cnn/config/best_weights.h5' # веса нейросети
 socket_name = "tcp://*:5555"
+
+def parseArgs ():
+	parser = argparse.ArgumentParser()
+	parser.add_argument ('-p', '--port', default='5555')
+
+	return parser.parse_args(sys.argv[1:])
+
+args = parseArgs()
+if args.port:
+	socket_name = "tcp://*:{0}".format(args.port)
 
 cnn = Cnn(cnn_model, cnn_weight)
 

@@ -1,14 +1,22 @@
-#
-#   Hello World client in Python
-#   Connects REQ socket to tcp://localhost:5555
-#   Sends "Hello" to server, expects "World" back
-#
-
+import sys
+import argparse
 import zmq
 import json
 import json_coder.py.json_coder as json_coder
 import cv2
 from json_coder.py.messagetypes import *
+
+socket_name = "tcp://localhost:5555"
+
+def parseArgs ():
+	parser = argparse.ArgumentParser()
+	parser.add_argument ('-p', '--port', default='5555')
+
+	return parser.parse_args(sys.argv[1:])
+
+args = parseArgs()
+if args.port:
+	socket_name = "tcp://localhost:{0}".format(args.port)
 
 
 context = zmq.Context()
@@ -16,7 +24,7 @@ context = zmq.Context()
 #  Socket to talk to server
 print("Connecting to hello world server…")
 socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
+socket.connect(socket_name)
 
 	
 
