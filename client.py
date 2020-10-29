@@ -2,9 +2,8 @@ import sys
 import argparse
 import zmq
 import json
-import json_coder.py.json_coder as json_coder
+from json_coder import *
 import cv2
-from json_coder.py.messagetypes import *
 
 socket_name = "tcp://localhost:5555"
 
@@ -38,14 +37,14 @@ while 1:
 	CNNTask1.b = 5
 	CNNTask1.image = frame
 
-	j_str = json.dumps(CNNTask1, cls=json_coder.coder.CustomEncoder)
+	j_str = json.dumps(CNNTask1, cls=CustomEncoder)
 
 	socket.send(bytes(j_str, 'utf-8'))
 
 	#  Get the reply.
 	message = socket.recv().decode('utf-8')
 	try :
-		j_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
+		j_obj = json.loads(message, object_hook=decode_object)
 		print("res = {}".format(j_obj.res))
 		cv2.imshow("client", j_obj.image)
 		# cv2.waitKey(5000)
@@ -65,6 +64,6 @@ cv2.destroyAllWindows()
 
 
 kill_task = ServiceTask("kill")
-j_str = json.dumps(kill_task, cls=json_coder.coder.CustomEncoder)
+j_str = json.dumps(kill_task, cls=CustomEncoder)
 socket.send(bytes(j_str, 'utf-8'))
 

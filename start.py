@@ -3,8 +3,7 @@ import argparse
 from json.decoder import JSONDecodeError
 import zmq
 import json
-import json_coder.py.json_coder as json_coder
-from json_coder.py.messagetypes import *
+from json_coder import * 
 from cnn.cnn import *
 
 cnn_model = './cnn/config/model.json' # граф нейросети
@@ -33,7 +32,7 @@ while True:
 
 
 	try:
-		task_obj = json.loads(message, object_hook=json_coder.decoder.decode_object)
+		task_obj = json.loads(message, object_hook=decode_object)
 
 		if isinstance(task_obj, ServiceTask):
 			service_task: ServiceTask = task_obj
@@ -44,14 +43,14 @@ while True:
 			cnn_task: CNNTask = task_obj
 			answer: CNNAnswer = CNNAnswer()
 			answer.image = cnn.predict(cnn_task.image)
-			answer_str = json.dumps(answer, cls=json_coder.coder.CustomEncoder)
+			answer_str = json.dumps(answer, cls=CustomEncoder)
 			socket.send(bytes( answer_str, 'utf-8' ))
 			continue
 	except JSONDecodeError:
 		print("invalid json \n {}".format(message))
 		error_answer = ServiceTask()
 		error_answer.command = "Illegal json"
-		answer_str = json.dumps(error_answer, cls=json_coder.coder.CustomEncoder)
+		answer_str = json.dumps(error_answer, cls=CustomEncoder)
 		socket.send(bytes( answer_str, 'utf-8' ))
 		continue
 
@@ -60,6 +59,6 @@ while True:
 	#  Send reply back to client
 	defualt_answer = ServiceTask()
 	defualt_answer.command = "Illegal command"
-	answer_str = json.dumps(defualt_answer, cls=json_coder.coder.CustomEncoder)
+	answer_str = json.dumps(defualt_answer, cls=CustomEncoder)
 	socket.send(bytes( answer_str, 'utf-8' ))
 
