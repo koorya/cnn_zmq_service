@@ -38,6 +38,9 @@ while True:
 			service_task: ServiceTask = task_obj
 			if service_task.command == "kill":
 				print("reciev kill command")
+				last_resp: ServiceTask = ServiceTask("ok, shutdown")
+				answer_str = json.dumps(last_resp, cls=CustomEncoder)
+				socket.send(bytes( answer_str, 'utf-8' ))
 				break
 		elif isinstance(task_obj, CNNTask):
 			cnn_task: CNNTask = task_obj
@@ -48,8 +51,7 @@ while True:
 			continue
 	except JSONDecodeError:
 		print("invalid json \n {}".format(message))
-		error_answer = ServiceTask()
-		error_answer.command = "Illegal json"
+		error_answer = ServiceTask("Illegal json")
 		answer_str = json.dumps(error_answer, cls=CustomEncoder)
 		socket.send(bytes( answer_str, 'utf-8' ))
 		continue
@@ -57,8 +59,7 @@ while True:
 
 
 	#  Send reply back to client
-	defualt_answer = ServiceTask()
-	defualt_answer.command = "Illegal command"
+	defualt_answer = ServiceTask("Illegal command")
 	answer_str = json.dumps(defualt_answer, cls=CustomEncoder)
 	socket.send(bytes( answer_str, 'utf-8' ))
 

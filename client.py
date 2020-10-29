@@ -66,4 +66,6 @@ cv2.destroyAllWindows()
 kill_task = ServiceTask("kill")
 j_str = json.dumps(kill_task, cls=CustomEncoder)
 socket.send(bytes(j_str, 'utf-8'))
+message = socket.recv().decode('utf-8')
+print(message)
 
