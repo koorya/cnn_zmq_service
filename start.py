@@ -3,12 +3,14 @@ import argparse
 from json.decoder import JSONDecodeError
 import zmq
 import json
-from json_coder import * 
+from json_coder.py import CustomEncoder, decode_object
+from json_coder.py.messages import ServiceTask, CNNTask, CNNAnswer
 from cnn.cnn import *
 
 cnn_model = './cnn/config/model.json' # граф нейросети
 cnn_weight = './cnn/config/best_weights.h5' # веса нейросети
 socket_name = "tcp://*:5555"
+KILL_COMMAND = "kill"
 
 def parseArgs ():
 	parser = argparse.ArgumentParser()
@@ -36,7 +38,7 @@ while True:
 
 		if isinstance(task_obj, ServiceTask):
 			service_task: ServiceTask = task_obj
-			if service_task.command == "kill":
+			if service_task.command == KILL_COMMAND:
 				print("reciev kill command")
 				last_resp: ServiceTask = ServiceTask("ok, shutdown")
 				answer_str = json.dumps(last_resp, cls=CustomEncoder)
