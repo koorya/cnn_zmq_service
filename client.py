@@ -2,7 +2,8 @@ import sys
 import argparse
 import zmq
 import json
-from json_coder import *
+from json_coder.py import CustomEncoder, decode_object
+from json_coder.py.messages import ServiceTask, CNNTask, CNNAnswer
 import cv2
 
 socket_name = "tcp://localhost:5555"
