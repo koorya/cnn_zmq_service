@@ -22,6 +22,8 @@ args = parseArgs()
 if args.port:
 	socket_name = "tcp://*:{0}".format(args.port)
 
+print("socket name: {0}".format(socket_name))
+
 cnn = Cnn(cnn_model, cnn_weight)
 
 context = zmq.Context()
